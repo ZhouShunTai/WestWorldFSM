@@ -31,7 +31,7 @@ public class FarmerBob extends Entity{
         this.goldInBank = 0;
         this.currentLocation = "Mine";
 
-        this.stateMachine = new StateMachine<>(this);
+        this.stateMachine = new StateMachine<FarmerBob>(this);
         stateMachine.setCurrentState(EnterMineAndDigForNugget.getInstance());
         stateMachine.setGlobalState(BobGlobalState.getInstance());
     }
@@ -69,16 +69,8 @@ public class FarmerBob extends Entity{
         goldInPocket = 0;
     }
 
-    public void goToToilet(){
-        System.out.println(say("Estou tirando água do joelho..."));
-        pee = 0;
-    }
 
     // Helper methods
-    /** Returns a string to say */
-    private String say(String toSay){
-        return this.getName() + ": -" + toSay;
-    }
 
     /** Tries to get a nugget, only if pockets are not full and daily goal not reached */
     private void tryToGetNugget(){
@@ -138,38 +130,18 @@ public class FarmerBob extends Entity{
         return thirst == 0;
     }
 
-    public void gainPee(){
-        if(pee <= 10){
-            pee++;
-        }else{
-            pee = 10;
-        }
-    }
 
-    public void gainPee(int valueToIncrease){
-        if(pee <= 10){
-            pee += valueToIncrease;
-        }else{
-            pee = 10;
-        }
-    }
+    ///** Increases the pee by one */
 
-    /** Returns true if needs to use the restroom */
-    public boolean needToUseRestroom(){
-        return pee >= 10;
-    }
 
-    /** Returns true if pee is zero */
-    public boolean isRelieved(){
-        return pee == 0;
-    }
 
-    public void setBillyWorked(FarmerBilly billy, boolean workState){
+    public void setBillyWorked(boolean workState){
+        var billy = ((FarmerBilly) EntityManager.getInstance().getEntity("Billy"));
         billy.setWorked(workState);
     }
 
     public boolean billyWorked(){
-        var billy = EntityManager.getInstance().getEntity("Billyl");
+        var billy = EntityManager.getInstance().getEntity("Billy");
 
         return ((FarmerBilly) billy).getWorked();
     }

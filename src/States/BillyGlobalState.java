@@ -1,8 +1,10 @@
 package States;
 
 import Farmers.Entity;
+import Farmers.FarmerBilly;
+import Messages.Message;
 
-public class BillyGlobalState implements IState<Entity>{
+public class BillyGlobalState implements IState<FarmerBilly>{
     private static BillyGlobalState instance = null;
     private BillyGlobalState(){}
     public static BillyGlobalState getInstance(){
@@ -12,17 +14,28 @@ public class BillyGlobalState implements IState<Entity>{
         return instance;
     }
     @Override
-    public void enter(Entity entity) {
-
+    public void enter(FarmerBilly billy) {
+        execute(billy);
     }
 
     @Override
-    public void execute(Entity entity) {
-
+    public void execute(FarmerBilly billy) {
+        if(billy.needToUseRestroom()){
+            billy.getStateMachine().changeState(VisitBathroom.getInstance());
+        }
     }
 
     @Override
-    public void exit(Entity entity) {
+    public void exit(FarmerBilly billy) {
+        // TODO há necessidade de deixar o global state null?
+    }
 
+    @Override
+    public boolean onMessage(FarmerBilly billy, Message msg) {
+        if(msg.getMessage().compareTo("GetToWork!") == 0){
+            billy.getStateMachine().changeState(FakeWork.getInstance());
+            return true;
+        }
+        return false;
     }
 }

@@ -19,9 +19,11 @@ public class GoHomeAndSleepTilRested implements IState<FarmerBob>{
     @Override
     public void enter(FarmerBob bob) {
         bob.setCurrentLocation("Farm");
+        bob.say("Estou chegando em casa.");
         Entity billy = EntityManager.getInstance().getEntity("Billy");
-        bob.setBillyWorked(((FarmerBilly) billy), false); // TODO Check
+        bob.setBillyWorked(false);
         MessageDispatcher.getInstance().dispatchMessage(bob, billy, "GetToWork!", null);
+        execute(bob);
     }
 
     @Override
@@ -30,14 +32,13 @@ public class GoHomeAndSleepTilRested implements IState<FarmerBob>{
         if(bob.billyWorked() && bob.isRested()){
             bob.getStateMachine().changeState(EnterMineAndDigForNugget.getInstance());
         }else if(bob.isRested()){
-            // TODO finish this state and slide semana 7 pagina 21
             System.out.println("Esperando o Billy terminar de trabalhar...");
         }
     }
 
     @Override
     public void exit(FarmerBob bob) {
-
+        bob.say("Um novo dia! Estou pronto para ficar mais rico!");
     }
 
     @Override

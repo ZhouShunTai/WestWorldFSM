@@ -1,38 +1,43 @@
 package States;
 
-import Farmers.Entity;
+import Farmers.EntityManager;
 import Farmers.FarmerBilly;
 import Messages.Message;
+import Messages.MessageDispatcher;
 
 import java.util.Random;
 
-public class WalkAroundTheFarm implements IState<FarmerBilly>{
-    private static WalkAroundTheFarm instance = null;
-    private WalkAroundTheFarm(){}
-    public static WalkAroundTheFarm getInstance(){
+public class FakeWork implements IState<FarmerBilly>{
+    private static FakeWork instance = null;
+    private FakeWork(){}
+    public static FakeWork getInstance(){
         if (instance == null){
-            instance = new WalkAroundTheFarm();
+            instance = new FakeWork();
         }
         return instance;
     }
     @Override
     public void enter(FarmerBilly billy) {
         billy.setCurrentLocation("Farm");
-        billy.say("Acho que vou passear um pouco... Já trabalhei muito!");
+        billy.say("Droga, o Bob me mandou trabalhar...");
+        execute(billy);
     }
 
     @Override
     public void execute(FarmerBilly billy) {
-        billy.walkAround();
+        billy.fakeWorking();
         var random = new Random();
-        if(random.nextInt(5) == 1){
+        if(random.nextInt(2) == 0){
+
+        }else{
             billy.getStateMachine().changeState(LookAtTheWeather.getInstance());
         }
     }
 
     @Override
     public void exit(FarmerBilly billy) {
-        billy.say("Cansei de passear...");
+        billy.say("Ai minhas costas... Por hoje já chega Bob!");
+        MessageDispatcher.getInstance().dispatchMessage(billy, EntityManager.getInstance().getEntity("Bob"), "JobsDone!", null );
     }
 
     @Override
